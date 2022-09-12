@@ -10,9 +10,10 @@ Landmarks is an app for discovering and sharing the places you love.
 - Coordinator
 - GeometryReader
 - Identifiable Protocol
+- MacOS Target
 - MapKit Framework
 - Navigation
-- Notification interface (watchOS target)
+- Notification interface (WatchOS Target)
 - Path
 - Preferences
 - User Profile
