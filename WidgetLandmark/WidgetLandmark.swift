@@ -16,19 +16,20 @@ struct SimpleEntry: TimelineEntry {
 
 private let color = CGColor(red: 0, green: 204, blue: 0, alpha: 1)
 private let modelData = ModelData()
+private let defaultHike = modelData.hikes[modelData.hikes.count - 1]
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), hike: modelData.hikes[modelData.hikes.count - 1])
+        SimpleEntry(date: Date(), hike: defaultHike)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), hike: modelData.hikes[modelData.hikes.count - 1])
+        let entry = SimpleEntry(date: Date(), hike: defaultHike)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        let entries: [SimpleEntry] = [SimpleEntry(date: Date(), hike: modelData.hikes[modelData.hikes.count - 1])]
+        let entries: [SimpleEntry] = [SimpleEntry(date: Date(), hike: defaultHike)]
 
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
@@ -36,85 +37,32 @@ struct Provider: TimelineProvider {
 }
 
 @main
-struct SmallWidgetStruct: Widget {
+struct WidgetStruct: Widget {
     let kind: String = "LastHikeWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            WidgetView(hike: entry.hike)
+            WidgetView(entry: entry)
         }
         .configurationDisplayName("LastHikeDetail")
         .description("Keep track of the last hike")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
 struct WidgetView : View {
-    let hike: Hike
-
-    var body: some View {
-        ZStack {
-            Color(color)
-            
-            HStack {
-                VStack {
-                    LastHikeName(hike: hike)
-                
-                    Spacer()
-                    
-                    HikeInfo(hike: hike)
-                }.padding(.all)
-            }
-        }
-    }
-}
-
-struct Small : View {
+    @Environment(\.widgetFamily) var widgetFamily
     var entry: Provider.Entry
     
+    @ViewBuilder
     var body: some View {
-        WidgetView(hike: entry.hike)
-    }
-}
-
-struct LastHikeName: View {
-    @State var backgroundColor = CGColor(red: 0, green: 100, blue: 50, alpha: 1)
-    let hike: Hike
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("Last Hike")
-                    .font(.footnote)
-                
-                Spacer(minLength: 1)
-                
-                Text(hike.name)
-                    .font(.body)
-                    .bold()
-            }
-            
-            Spacer(minLength: 0)
-        }
-        .padding(.all, 8.0)
-        .background(
-            ContainerRelativeShape().fill(
-                Color(backgroundColor)))
-    }
-}
-
-struct HikeInfo: View {
-    @State var date = Date().advanced(by: (-60 * 29 + 5))
-    let hike: Hike
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(hike.distanceText)
-                .font(.title2)
-                .bold()
-            
-            Text("\(date, style: .relative) ago")
-                .font(.caption)
+        switch widgetFamily {
+            case .systemSmall:
+                SmallWidget(hike: entry.hike, color: color)
+            case .systemMedium:
+                MediumWidget(hike: entry.hike, color: color)
+            default:
+                LargeWidget(hike: entry.hike, color: color)
         }
     }
 }
@@ -122,32 +70,9 @@ struct HikeInfo: View {
 struct WidgetLandmark_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            WidgetView(hike: modelData.hikes[modelData.hikes.count - 1])
-                .previewContext(WidgetPreviewContext(family: .systemSmall))
+            WidgetView(entry: SimpleEntry(date: Date(), hike: defaultHike))
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }
 }
 
-/*
-struct MediumWidget : View {
-    let hike: Hike
-
-    var body: some View {
-        ZStack {
-            Color(color)
-            
-            HStack {
-                SmallPart(hike: hike)
-                
-                Divider()
-                
-                VStack {
-                    Text("Heart Rate")
-                
-                    HikeGraph(hike: hike, path: \.heartRate)
-                }.padding(.all)
-            }
-        }
-    }
-}
-*/
