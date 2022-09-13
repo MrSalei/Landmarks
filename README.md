@@ -17,4 +17,5 @@ Landmarks is an app for discovering and sharing the places you love.
 - Path
 - Preferences
 - User Profile
+- Widgets
 - View Transitions
