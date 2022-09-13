@@ -16,21 +16,31 @@ struct SimpleEntry: TimelineEntry {
 
 private let color = CGColor(red: 0, green: 204, blue: 0, alpha: 1)
 private let modelData = ModelData()
-private let defaultHike = modelData.hikes[modelData.hikes.count - 1]
+private let lastHike = modelData.hikes[modelData.hikes.count - 1]
 
-struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), hike: defaultHike)
+struct Provider: IntentTimelineProvider {
+
+    func hike(for configuration: HikeSelectionIntent) -> Hike {
+        switch configuration.hero {
+            case .first:
+                return modelData.hikes[0]
+            default:
+                return lastHike
+        }
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), hike: defaultHike)
+    func placeholder(in context: Context) -> SimpleEntry {
+        SimpleEntry(date: Date(), hike: lastHike)
+    }
+
+    func getSnapshot(for configuration: HikeSelectionIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+        let entry = SimpleEntry(date: Date(), hike: lastHike)
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        let entries: [SimpleEntry] = [SimpleEntry(date: Date(), hike: defaultHike)]
-
+    func getTimeline(for configuration: HikeSelectionIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        let hike = hike(for: configuration)
+        let entries: [SimpleEntry] = [SimpleEntry(date: Date(), hike: hike)]
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
@@ -41,7 +51,7 @@ struct WidgetStruct: Widget {
     let kind: String = "LastHikeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        IntentConfiguration(kind: kind, intent: HikeSelectionIntent.self, provider: Provider()) { entry in
             WidgetView(entry: entry)
         }
         .configurationDisplayName("LastHikeDetail")
@@ -70,7 +80,7 @@ struct WidgetView : View {
 struct WidgetLandmark_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            WidgetView(entry: SimpleEntry(date: Date(), hike: defaultHike))
+            WidgetView(entry: SimpleEntry(date: Date(), hike: lastHike))
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }

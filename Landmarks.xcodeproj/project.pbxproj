@@ -232,6 +232,7 @@
 		40A8CE0F28CBA39100629DD6 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		40A8CE1128CBAA9500629DD6 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		40F7187328D0E8F300F2BE45 /* FamilyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyViews.swift; sourceTree = "<group>"; };
+		40F7187828D1080100F2BE45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,6 +318,7 @@
 		4054C2D728CA009E0004CF40 /* Landmarks */ = {
 			isa = PBXGroup;
 			children = (
+				40F7187828D1080100F2BE45 /* Info.plist */,
 				4054C2D828CA009E0004CF40 /* LandmarksApp.swift */,
 				4054C2F428CA0DA20004CF40 /* Resources */,
 				4054C2F328CA0D9D0004CF40 /* Model */,
@@ -1000,6 +1002,7 @@
 				DEVELOPMENT_TEAM = Y97YKW5885;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Landmarks/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1030,6 +1033,7 @@
 				DEVELOPMENT_TEAM = Y97YKW5885;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Landmarks/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
